@@ -1,6 +1,10 @@
 # RADAR — the token launch radar
 
-**make.fun bounty `token-radar-01`** · ranked pre-token protocols, an implied value built from the
+[![make.fun · token-radar-01](https://make.fun/badge/token-radar-01.svg)](https://make.fun/bounty/token-radar-01?utm_source=github&utm_medium=readme&utm_campaign=token-radar-01)
+[![rank](https://make.fun/badge/token-radar-01/KaivanETH/token-radar-01/rank.svg)](https://make.fun/bounty/token-radar-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=token-radar-01)
+[![reward](https://make.fun/badge/token-radar-01/KaivanETH/token-radar-01/reward.svg)](https://make.fun/bounty/token-radar-01?utm_source=github&utm_medium=readme&utm_campaign=token-radar-01)
+
+**Entry for the [`token-radar-01`](https://make.fun/bounty/token-radar-01) bounty on [make.fun](https://make.fun)** — `token-radar-01` · ranked pre-token protocols, an implied value built from the
 snapshot's own figures, and a farm plan with a price and a clock for every row.
 
 ![Node](https://img.shields.io/badge/Node-22.18%2B-3c873a)
