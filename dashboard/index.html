@@ -3,12 +3,125 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Token Radar: pre-token protocols ranked by implied value</title>
+<title>RADAR — the token launch radar</title>
+<meta name="description" content="Every protocol in the sealed snapshot that records no token, ranked by the value its launch would imply, with a farm plan, its cost and its clock.">
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
 <a class="skip" href="#board">Skip to the board</a>
-<main id="board" tabindex="-1" aria-busy="true"></main>
+
+<header class="mast">
+  <div class="wrap mast-grid">
+    <div class="brand">
+      <span class="sweep" aria-hidden="true"><i></i></span>
+      <div>
+        <h1>RADAR</h1>
+        <p class="brand-sub">token launch radar</p>
+      </div>
+    </div>
+    <p class="lede">Every protocol in the sealed snapshot that records no token, ranked by what its launch would be worth if the record held — and, for each one, the steps to farm it, what they cost and how long they take.</p>
+    <dl class="meta" id="meta" aria-label="Snapshot"></dl>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="stats" id="stats" aria-label="The snapshot at a glance"></section>
+
+  <section class="panel model" aria-label="How the number is made">
+    <div class="model-main">
+      <div class="sec-head">
+        <h2>How the number is made</h2>
+        <p class="kicker">one formula · every row · no name special-cased</p>
+      </div>
+      <p class="formula"><span class="var">implied</span> = <span class="var">TVL</span> × <span class="var">multiple</span> × <span class="var">momentum</span> × <span class="var">tenure</span></p>
+      <ul class="terms">
+        <li><b>multiple</b><span id="t-mult">—</span></li>
+        <li><b>momentum</b><span id="t-mom">—</span></li>
+        <li><b>tenure</b><span id="t-ten">—</span></li>
+      </ul>
+    </div>
+    <div class="model-aside">
+      <h3>What it does not claim</h3>
+      <p>It does not say a token will be issued, or when. It prices the record as it stands: a protocol that records no token is a candidate, never a promise. The watchlist is the house's floor; the board carries it whole and adds every smaller candidate the snapshot holds.</p>
+      <h3>The second lens</h3>
+      <p><b class="accent">Farm window</b> is 0–100 and never moves a rank: 45% seven-day TVL momentum, 35% youth, 20% size. Rank says what the launch is worth; window says whether to start this month.</p>
+    </div>
+  </section>
+
+  <section class="board" id="board" aria-label="The board">
+    <div class="sec-head board-head">
+      <div>
+        <h2>The board</h2>
+        <p class="kicker" id="board-kicker">—</p>
+      </div>
+      <p class="board-note" id="board-note">—</p>
+    </div>
+
+    <div class="controls">
+      <label class="field grow">
+        <span>Search</span>
+        <input id="q" type="search" placeholder="name, slug, chain or category" autocomplete="off" spellcheck="false">
+      </label>
+      <label class="field">
+        <span>Category</span>
+        <select id="cat"></select>
+      </label>
+      <label class="field">
+        <span>Window</span>
+        <select id="win">
+          <option value="any">any</option>
+          <option value="wide">wide · 65+</option>
+          <option value="open">open · 40–64</option>
+          <option value="closing">closing · under 40</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Sort by</span>
+        <select id="sort">
+          <option value="implied">implied value</option>
+          <option value="tvl">TVL</option>
+          <option value="change">7-day change</option>
+          <option value="age">age</option>
+          <option value="window">farm window</option>
+          <option value="name">name</option>
+        </select>
+      </label>
+      <button class="ghost dir" id="dir" type="button" title="Reverse the order">↓</button>
+      <button class="ghost" id="reset" type="button">Reset</button>
+    </div>
+
+    <div class="tabs-row">
+      <div class="tabs" role="group" aria-label="Which rows">
+        <button type="button" data-stage="board" aria-pressed="true">All candidates <b id="n-board">—</b></button>
+        <button type="button" data-stage="watch" aria-pressed="false">Watchlist <b id="n-watch">—</b></button>
+        <button type="button" data-stage="below" aria-pressed="false">Below the floor <b id="n-below">—</b></button>
+        <button type="button" data-stage="live" aria-pressed="false">Token already trades <b id="n-live">—</b></button>
+      </div>
+      <p class="count" id="count">—</p>
+    </div>
+
+    <div class="panel table-wrap">
+      <table id="table">
+        <thead id="thead"></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div class="empty" id="empty" hidden>
+        <p>No protocol matches that.</p>
+        <button class="ghost" id="clear" type="button">Clear the filters</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="detail" id="detail" hidden aria-label="Protocol detail"></section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <p><b>RADAR</b> reads one sealed snapshot and writes this page, its data and its board. Source: <span id="f-source">—</span>. The snapshot records no token for the protocols above; that is the record, not proof they have none. An implied value is this radar's own claim, not advice, and not a prediction that a token is issued.</p>
+    <p class="foot-right">Built for the make.fun bounty <b>token-radar-01</b>.<br>Node 22 · no network · no framework · one page.</p>
+  </div>
+</footer>
+
 <script src="../data.js"></script>
 <script src="app.js"></script>
 </body>
