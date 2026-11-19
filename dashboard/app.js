@@ -634,7 +634,7 @@
     ' below the $' + (DATA.floor_usd / 1e6).toFixed(0) + 'M floor · ' + DATA.counts.above_floor_off_list +
     ' above it the list leaves out · ' + DATA.as_of;
   document.getElementById('board-note').textContent =
-    'Rank is the model’s claim, not advice. Click any row for its arithmetic, its record and its farm plan.';
+    'Rank is implied value. Window is the timing signal — 45% momentum, 35% youth, 20% size — and never moves a rank. Click a row for its arithmetic and its plan.';
   bind();
   syncControls();
   renderTable();

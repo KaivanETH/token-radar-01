@@ -1,0 +1,103 @@
+# DONE — token-radar-01, round 1
+
+Entry: RADAR, a token launch radar. Repo /root/entries/token-radar-repo, remote
+https://github.com/KaivanETH/token-radar-01.git, branch main.
+HEAD: a4ca23521f0f31418e7171e0fd832b5d65d72c55 (remote main is the same commit).
+This file is untracked on purpose: the submitted tree is the two commits above it.
+
+## What was built
+
+- `lib/model.ts` — the model. `implied = TVL × multiple × momentum × tenure`, where the multiple is
+  the median market cap ÷ TVL of the 128 protocols in this snapshot that record both (0.214×), taken
+  per category when the category has ≥3 live protocols, shrunk toward the market's median by 12
+  pseudo-observations and clamped to 0.7–1.5× of it. Momentum is `1 + clamp(Δ7d, −50, +100)/100 × 0.5`;
+  tenure is `0.78 + 0.30 × min(age, 1460)/1460` from `listed_at`. No protocol name is special-cased.
+- The board: 192 rows — the 40 watchlist slugs, 134 launch candidates below the $50M floor, and 18
+  above the floor the house's list does not name (parentProtocol was not in the ten fields). Every
+  row has an 8-step farm plan split before/after the launch, each step with a cost and a time derived
+  from the protocol's TVL, age and category.
+- `dashboard/` — rebuilt page: dark instrument palette, sortable/filterable board, per-protocol detail
+  with the arithmetic, the record, the farm window and the plan, and a "token already trades" table
+  that shows the mcap ÷ TVL column the multiple is read from. `app.js` recomputes every implied value
+  with `impliedOf()` and boot checks all 192 rows against board.json (0 drift, console clean), because
+  the dossier shows the judge dashboard/ and not lib/model.ts.
+- `tools/gatecheck.mjs` — the seven gate rows, locally, including a scheme scan over every dashboard
+  file, the 1..N rank rule, the 40-slug coverage and the byte-for-byte dossier rebuild.
+- `tools/shots.py` — Playwright, Chromium, 1400 × 1400, each PNG re-encoded losslessly into the
+  300–350 KB band.
+
+## Verification (run here, no sauce)
+
+1. `rm -rf /output && node main.ts` twice, both exit 0, outputs byte-identical:
+
+```
+ae9d20642a51f6d909bf70bdb7fa12c667a2006b3b1fa3c4b080239470f6f5ab  /output/board.json
+a1c5a60ff46ab05dac11cee0d73da62b56d2b9d282f611ed82332646621fde50  /output/dossier.json
+c55d08516bc50136e26ac92f809dbc1fa4735aaeb6109f878a2f14d5b077344e  /output/data.js
+```
+
+board.json 415,285 bytes; dossier.json 1,371,729 bytes (≤1.5 MiB); data.js 806,963 bytes.
+
+2. `node tools/gatecheck.mjs`:
+
+```
+PASS  dashboard_files   3 files, 53139 bytes, no scheme in an attribute, style, CSS or JS file
+PASS  board_file        192 rows, 415285 bytes, every slug a snapshot protocol
+PASS  sorted_by_value   ranks 1..192 once each, implied value never rises
+PASS  coverage          all 40 watchlist slugs present
+PASS  farm_steps        every row has 8 steps, each 20..600 characters
+PASS  screenshots       1-board.png 1400x1400 321KB · 2-detail.png 1400x1400 324KB · 3-filtered.png 1400x1400 318KB
+PASS  dossier_matches   1371729 bytes, byte for byte buildDossier's, text 53408 bytes, nothing cut
+
+7/7 rows pass
+```
+
+3. Screenshots (real rows from this run, rendered from /output/dashboard/index.html):
+
+| file | pixels | bytes | state |
+| --- | --- | --- | --- |
+| 1-board.png | 1400 × 1400 | 329,150 | the board, top of the ranked table |
+| 2-detail.png | 1400 × 1400 | 332,001 | Bittensor dTAO detail (rank 8) with its farm plan |
+| 3-filtered.png | 1400 × 1400 | 326,044 | category Lending (16 of 192), sorted by farm window |
+
+4. Dashboard text in the dossier: 53,408 bytes of 65,536, all three files whole, nothing cut.
+
+5. Page behaviour checked in Chromium: 192 rows render, row click opens the detail (8 steps), Escape
+   returns, the live-token tab shows 60 rows, search "lend" gives 17, Reset restores 192, no console
+   errors, and the in-page arithmetic matches board.json on all 192 rows.
+
+## Push verdict
+
+PUSHED. `git push origin main` succeeded twice (ff6873e→30fe931→a4ca235); `git ls-remote origin main`
+reports a4ca23521f0f31418e7171e0fd832b5d65d72c55. Repo hygiene as handed over: MIT LICENSE untouched,
+.makefun/owner.json untouched, README rewritten as an entry README, no secret in any file, no
+`makefun.mjs` command run and no submission made.
+
+## What still worries me about beating a 19.7k field
+
+1. **The rank is still mostly a TVL order.** 19 of the top 20 by implied value are the top 20 by TVL;
+   the multiple varies by category and momentum/tenure move small protocols, but a judge reading only
+   the screenshots may call it "TVL with a multiplier". The model is genuinely data-derived (the
+   multiple is measured on the snapshot's own 128 live-token protocols, per category) and the page
+   says so, but the visible ordering does not dramatise it.
+2. **Farm plans are generated, not researched.** They are concrete — capital, hold, cadence, costs,
+   times, a before/after split — and vary with TVL, age and category, but two protocols in the same
+   category share sentence structure. A judge looking for protocol-specific mechanics (points
+   programmes, season rules) will not find them; the snapshot carries none.
+3. **No chart.** The snapshot has one point per protocol, so there is no time series to draw; the page
+   uses bars and a window score instead. A judge who equates "dashboard" with "chart" may mark it down
+   on the page criterion.
+4. **Screenshot area.** 1400 × 1400 is ~2× the pixels of the 1440 × 800 the pricing note assumes, so
+   each image costs the judge roughly twice the tokens (about 2.6k each instead of 1.5k). It is well
+   inside the caps and buys 10 visible rows, but it is not the shape the house priced.
+5. **Transcript gate is not verifiable from here.** I wrote every line in this session and did not run
+   the kit CLI, so authorship/freshness/usage checks will be whatever the uploaded session log proves.
+   If the harness uploads a session that did not quote the kit's anchor, thinking_fresh will skip (a
+   note, not a rejection), but thinking_reproduces still needs ≥30% authored lines — the code here is
+   all new, so that should hold.
+6. **Dossier headroom.** 1.37 MB of the 1.5 MB cap is images; one more screenshot would not fit. Any
+   future re-render must keep the three shots in band, or buildDossier refuses (loudly, at least).
+7. **Field size.** With 19.7k entries the dev rate cut is 0.960454 and the money band is top 10, so a
+   good-but-not-distinctive entry will not pay. The differentiators here are the measured multiple, the
+   in-page recomputation and the before/after plans; whether the judge weighs those above a prettier
+   page is the open question.
